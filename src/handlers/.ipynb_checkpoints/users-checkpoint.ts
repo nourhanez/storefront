@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import { User, UserStore } from '../models/users'
+import { verifyAuthToken } from '../middlewares/verifyToken'
 
 const store = new UserStore()
 
@@ -41,18 +42,6 @@ const authenticate = async (req: Request, res: Response) => {
       res.status(401)
       res.json({ error })
   }
-}
-
-const verifyAuthToken = (req: Request, res: Response, next) => {
-    try {
-        const authorizationHeader = req.headers.authorization
-        const token = authorizationHeader.split(' ')[1]
-        const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
-
-        next()
-    } catch (error) {
-        res.status(401)
-    }
 }
 
 const userRoutes = (app: express.Application) => {
