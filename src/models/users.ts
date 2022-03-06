@@ -1,11 +1,14 @@
 // @ts-ignore
 import Client from '../database'
 import bcrypt from 'bcrypt'
+import dotenv from 'dotenv'
 
+dotenv.config()
 export type User = {
      id: number;
      firstName: string;
      lastName: string;
+     username: string;
      password: string;
 }
 
@@ -44,14 +47,16 @@ export class UserStore {
 
   async create(b: User): Promise<User> {
       try {
-    const sql = 'INSERT INTO users (firstname, lastname, password) VALUES($1, $2, $3) RETURNING *'
+      const pepper: string = process.env.BCRYPT_PASSWORD as string;
+      const saltRounds: string = process.env.SALT_ROUNDS as string;
+    const sql = 'INSERT INTO users (firstname, lastname, password, username) VALUES($1, $2, $3, $4) RETURNING *'
     // @ts-ignore
     const conn = await Client.connect()
 
     const hash = bcrypt.hashSync(b.password + pepper,  parseInt(saltRounds))
     
     const result = await conn
-        .query(sql, [b.firstName, b.lastName, hash])
+        .query(sql, [b.firstName, b.lastName, hash, b.username])
 
     
     const user = result.rows[0]
@@ -66,8 +71,9 @@ export class UserStore {
     
     
   async authenticate(username: string, password: string): Promise<User | null> {
+      const pepper: string = process.env.BCRYPT_PASSWORD as string;
     const conn = await Client.connect()
-    const sql = 'SELECT password FROM users WHERE username=($1)'
+    const sql = 'SELECT * FROM users WHERE username=($1)'
 
     const result = await conn.query(sql, [username])
 

@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express'
 import { User, UserStore } from '../models/users'
-import { verifyAuthToken } from '../middlewares/verifyToken'
+import { verifyAuthToken } from '../middlewares/verifyAuthToken'
+import jwt from 'jsonwebtoken'
+
 
 const store = new UserStore()
 
@@ -16,6 +18,9 @@ const show = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
     const user: User = {
+        id: 0,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         username: req.body.username,
         password: req.body.password,
     }
@@ -30,9 +35,11 @@ const create = async (req: Request, res: Response) => {
 }
 
 const authenticate = async (req: Request, res: Response) => {
-  const user: User = {
-    username: req.body.username,
-    password: req.body.password,
+    const username: string = req.body.username;
+    const password: string = req.body.password;
+  const user = {
+    username: username,
+    password: password,
   }
   try {
       const u = await store.authenticate(user.username, user.password)

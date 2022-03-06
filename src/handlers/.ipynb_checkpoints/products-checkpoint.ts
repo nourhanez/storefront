@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express'
 import { Product, ProductStore } from '../models/products'
-import { verifyAuthToken } from '../middlewares/verifyToken'
+import { verifyAuthToken } from '../middlewares/verifyAuthToken'
+import jwt from 'jsonwebtoken'
+
 
 const store = new ProductStore()
 

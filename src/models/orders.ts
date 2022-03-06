@@ -40,7 +40,7 @@ export class OrderStore {
     }
   }
 
-  async showByUser(user_id: integer): Promise<Order> {
+  async showByUser(user_id: number): Promise<Order> {
     try {
     const sql = 'SELECT * FROM orders WHERE user_id=($1)'
     // @ts-ignore
@@ -71,7 +71,7 @@ export class OrderStore {
 
     return order
       } catch (err) {
-          throw new Error(`Could not add new order ${title}. Error: ${err}`)
+          throw new Error(`Could not add new order ${b.user_id}. Error: ${err}`)
       }
   }
 
