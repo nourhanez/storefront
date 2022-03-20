@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import orderRoutes from './handlers/orders'
 import userRoutes from './handlers/users'
 
-const app: express.Application = express()
+export const app: express.Application = express()
 const address: string = "0.0.0.0:3000"
 
 app.use(bodyParser.json())

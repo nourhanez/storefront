@@ -19,6 +19,7 @@ const show = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
     const product: Product = {
+        id: 0,
         name: req.body.name,
         price: req.body.price,
         category_id: req.body.category_id,

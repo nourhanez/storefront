@@ -1,4 +1,5 @@
-import dotenv from 'dotenv'
+const dotenv = require('dotenv')
+
 import { Pool } from 'pg'
 
 dotenv.config()
@@ -9,7 +10,7 @@ const client: Pool = new Pool({
   host: process.env.POSTGRES_HOST,
   port: parseInt(process.env.POSTGRES_PORT as string),
   database:
-    process.env.ENVI === 'test' ? process.env.POSTGRES_TEST_DB : process.env.POSTGRES_DB
+    process.env.ENV === 'dev' ? process.env.POSTGRES_TEST_DB : process.env.POSTGRES_DB
 });
 
 

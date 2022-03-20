@@ -1,7 +1,9 @@
 // @ts-ignore
 import Client from '../database'
-import bcrypt from 'bcrypt'
-import dotenv from 'dotenv'
+
+const bcrypt = require('bcrypt')
+
+const dotenv = require('dotenv')
 
 dotenv.config()
 export type User = {
@@ -91,5 +93,23 @@ export class UserStore {
     }
 
     return null
+  }
+
+  async delete(id: number): Promise<User> {
+      try {
+    const sql = 'DELETE FROM users WHERE id=($1)'
+    // @ts-ignore
+    const conn = await Client.connect()
+
+    const result = await conn.query(sql, [id])
+
+    const user = result.rows[0]
+
+    conn.release()
+
+    return user
+      } catch (err) {
+          throw new Error(`Could not delete user ${id}. Error: ${err}`)
+      }
   }
 }

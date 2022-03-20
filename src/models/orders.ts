@@ -3,7 +3,7 @@ import Client from '../database'
 
 export type Order = {
      id: number;
-     status: string;
+     status: boolean;
      user_id: number;
 }
 
@@ -24,7 +24,7 @@ export class OrderStore {
     }
   }
 
-  async show(id: string): Promise<Order> {
+  async show(id: number): Promise<Order> {
     try {
     const sql = 'SELECT * FROM orders WHERE id=($1)'
     // @ts-ignore
@@ -50,7 +50,7 @@ export class OrderStore {
 
     conn.release()
 
-    return result.rows
+    return result.rows[0]
     } catch (err) {
         throw new Error(`Could not find orders for user ${user_id}. Error: ${err}`)
     }
@@ -75,7 +75,7 @@ export class OrderStore {
       }
   }
 
-  async delete(id: string): Promise<Order> {
+  async delete(id: number): Promise<Order> {
       try {
     const sql = 'DELETE FROM orders WHERE id=($1)'
     // @ts-ignore
@@ -91,5 +91,24 @@ export class OrderStore {
       } catch (err) {
           throw new Error(`Could not delete order ${id}. Error: ${err}`)
       }
+  }
+    
+  async update (id: number, newOrderData: Order): Promise<Order> {
+    const {status, user_id} = newOrderData
+
+    try {
+      const sql = "UPDATE orders SET status = $1 WHERE id = $2 RETURNING *"
+      const connection = await Client.connect()
+      const {rows} = await connection.query(sql, [status, id])
+      const order = rows[0]
+
+      connection.release()
+
+      return {
+        ...order
+      }
+    } catch (err) {
+      throw new Error(`Could not update order for user ${user_id}. ${err}`)
+    }
   }
 }
