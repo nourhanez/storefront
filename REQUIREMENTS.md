@@ -25,20 +25,28 @@ These are the notes from a meeting with the frontend developer that describe wha
 -  id
 - name
 - price
-- [OPTIONAL] category
+- [OPTIONAL] category_id
 
 #### User
 - id
 - firstName
 - lastName
 - password
+- username
+
+#### Categories
+- id
+- name
 
 #### Orders
 - id
-- id of each product in the order
-- quantity of each product in the order
 - user_id
 - status of order (active or complete)
+
+#### Orders Products
+- quantity
+- order_id
+- product_id
 
 
   git config --global user.email "nournabeel@gmail.com"
